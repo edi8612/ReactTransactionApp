@@ -14,10 +14,11 @@ export default function Sidebar({ isOpen, onClose }) {
           isOpen ? 'translate-x-0' : '-translate-x-full'
         } md:translate-x-0 transition-transform duration-300 ease-in-out z-30`}
       >
-        <nav className="p-4 space-y-4">
-          <a href="#home" className="block p-2 hover:bg-gray-700 rounded">Home</a>
-          <a href="#create" className="block p-2 hover:bg-gray-700 rounded">Create New Transaction</a>
-          <a href="#auth" className="block p-2 hover:bg-gray-700 rounded">Login/Signup</a>
+        <nav className="p-4 text-white space-y-4">
+          <a href="#Home" className="block p-2 text-white hover:bg-gray-700 rounded">Home</a>
+          <a href="#CreateNewTransaction" className="block p-2 text-white hover:bg-gray-700 rounded">Create New Transaction</a>
+          <a href="#Login/Signup" className="block p-2 text-white hover:bg-gray-700 rounded">Login/Signup</a>
+          
         </nav>
       </aside>
     </>
