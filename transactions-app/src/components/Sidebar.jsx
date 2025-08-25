@@ -15,9 +15,9 @@ export default function Sidebar({ isOpen, onClose }) {
         } md:translate-x-0 transition-transform duration-300 ease-in-out z-30`}
       >
         <nav className="p-4 space-y-4">
-          <a href="#home" className="block p-2 hover:bg-gray-700 rounded">Home</a>
-          <a href="#create" className="block p-2 hover:bg-gray-700 rounded">Create New Transaction</a>
-          <a href="#auth" className="block p-2 hover:bg-gray-700 rounded">Login/Signup</a>
+          <a href="" className="block p-2 text-amber-50 hover:bg-gray-700 rounded">Home</a>
+          <a href="" className="block p-2 hover:bg-gray-700 rounded">Create New Transaction</a>
+          <a href="" className="block p-2 hover:bg-gray-700 rounded">Login/Signup</a>
         </nav>
       </aside>
     </>
