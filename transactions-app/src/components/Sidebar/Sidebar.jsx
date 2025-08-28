@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styles from "../Sidebar/Sidebar.module.css";
-import {MenuIcon,CloseIcon} from '../../icons';
+import {MenuIcon,CloseIcon} from '../../assets/icons';
 
 export default function Sidebar() {
   const [sidebarOpen, setSideBarOpen] = useState(false);
