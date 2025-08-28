@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import styles from "../Sidebar/Sidebar.module.css";
-import {MenuIcon,CloseIcon} from '../../assets/icons';
+import { MenuIcon, CloseIcon } from "../../assets/icons";
 
 export default function Sidebar() {
   const [sidebarOpen, setSideBarOpen] = useState(false);
@@ -9,6 +9,8 @@ export default function Sidebar() {
     setSideBarOpen(!sidebarOpen);
   };
 
+  const iconToShow = sidebarOpen ? <CloseIcon /> : <MenuIcon />;
+
   return (
     <>
       <button
@@ -16,7 +18,7 @@ export default function Sidebar() {
         className={styles.toggleButton}
         aria-label={sidebarOpen ? "Close menu" : "Open menu"}
       >
-        {sidebarOpen ? <CloseIcon/> : <MenuIcon/>}
+        {iconToShow}
       </button>
       {sidebarOpen && (
         <div
@@ -26,7 +28,7 @@ export default function Sidebar() {
       )}
 
       <aside
-        className={` ${styles.sidebarContainer}  ${
+        className={`${styles.sidebarContainer}  ${
           sidebarOpen ? styles.sidebarOpen : styles.sidebarClosed
         }`}
       >
