@@ -1,4 +1,4 @@
-import Transaction from "../components/Transactions.jsx";
+import Transaction from "../components/Transactions/Transactions.jsx";
 import { transactions } from "../transactions.js";
 
 export default function Home() {
