@@ -1,5 +1,6 @@
 import { useState } from "react";
 import styles from "../Sidebar/Sidebar.module.css";
+import {MenuIcon,CloseIcon} from '../../icons';
 
 export default function Sidebar() {
   const [sidebarOpen, setSideBarOpen] = useState(false);
@@ -15,7 +16,7 @@ export default function Sidebar() {
         className={styles.toggleButton}
         aria-label={sidebarOpen ? "Close menu" : "Open menu"}
       >
-        {sidebarOpen ? "✕" : "☰"}
+        {sidebarOpen ? <CloseIcon/> : <MenuIcon/>}
       </button>
       {sidebarOpen && (
         <div
