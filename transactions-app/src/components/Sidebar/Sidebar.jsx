@@ -1,4 +1,5 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
+import { NavLink } from "react-router-dom";
 import styles from "../Sidebar/Sidebar.module.css";
 import { MenuIcon, CloseIcon } from "../../assets/icons";
 
@@ -33,15 +34,15 @@ export default function Sidebar() {
         }`}
       >
         <nav className={styles.navContainer}>
-          <a href="#Home" className={styles.navLink}>
+          <NavLink to="/" className={styles.navLink}>
             Home
-          </a>
+          </NavLink>
           <a href="#CreateNewTransaction" className={styles.navLink}>
             Create New Transaction
           </a>
-          <a href="#Login/Signup" className={styles.navLink}>
+          <NavLink to="/auth" className={styles.navLink}>
             Login/Signup
-          </a>
+          </NavLink>
         </nav>
       </aside>
     </>
