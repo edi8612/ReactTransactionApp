@@ -28,7 +28,7 @@ export async function action({ request }) {
     headers: {
       "Content-Type": "application/json",
     },
-    credentials:'include',
+    credentials: "include",
     body: JSON.stringify(authData),
   });
 
@@ -44,6 +44,14 @@ export async function action({ request }) {
       }
     );
   }
+
+  const resData = await response.json();
+  const token = resData.token;
+  
+  localStorage.setItem("token", token);
+  const expiration = new Date();
+  expiration.setHours(expiration.getHours() + 1);
+  localStorage.setItem("expiration", expiration.toISOString());
 
   return redirect("/");
 }
