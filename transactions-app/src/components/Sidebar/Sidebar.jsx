@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, Form, useNavigate } from "react-router-dom";
 import styles from "../Sidebar/Sidebar.module.css";
 import { MenuIcon, CloseIcon } from "../../assets/icons";
 import { useAuth } from "../../context/AuthContext";
@@ -7,6 +7,12 @@ import { useAuth } from "../../context/AuthContext";
 export default function Sidebar() {
   const [sidebarOpen, setSideBarOpen] = useState(false);
   const { isAuthed, logout } = useAuth();
+  const navigate = useNavigate();
+
+  async function handleLogout() {
+    await logout();
+    navigate("/auth?mode=login");
+  }
 
   const toggleSidebar = () => {
     setSideBarOpen(!sidebarOpen);
@@ -40,16 +46,20 @@ export default function Sidebar() {
             Home
           </NavLink>
 
-          {isAuthed && (
-            <a href="#CreateNewTransaction" className={styles.navLink}>
-              Create New Transaction
-            </a>
-          )}
-
-          {isAuthed && (
+          {!isAuthed && (
             <NavLink to="/auth" className={styles.navLink}>
               Login/Signup
             </NavLink>
+          )}
+          {isAuthed && (
+            <>
+              <a href="#CreateNewTransaction" className={styles.navLink}>
+                Create New Transaction
+              </a>
+              <NavLink className={styles.navLink}>
+                <button onClick={handleLogout}>Logout</button>
+              </NavLink>
+            </>
           )}
         </nav>
       </aside>

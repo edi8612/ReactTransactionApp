@@ -1,5 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import { useNavigation, useLocation } from "react-router-dom";
 import { apiFetch } from "../lib/api";
+
 const AuthCtx = createContext(null);
 
 export default function AuthProvider({ children }) {
