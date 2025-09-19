@@ -2,9 +2,11 @@ import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import styles from "../Sidebar/Sidebar.module.css";
 import { MenuIcon, CloseIcon } from "../../assets/icons";
+import { useAuth } from "../../context/AuthContext";
 
 export default function Sidebar() {
   const [sidebarOpen, setSideBarOpen] = useState(false);
+  const { isAuthed, logout } = useAuth();
 
   const toggleSidebar = () => {
     setSideBarOpen(!sidebarOpen);
@@ -37,12 +39,18 @@ export default function Sidebar() {
           <NavLink to="/" className={styles.navLink}>
             Home
           </NavLink>
-          <a href="#CreateNewTransaction" className={styles.navLink}>
-            Create New Transaction
-          </a>
-          <NavLink to="/auth" className={styles.navLink}>
-            Login/Signup
-          </NavLink>
+
+          {isAuthed && (
+            <a href="#CreateNewTransaction" className={styles.navLink}>
+              Create New Transaction
+            </a>
+          )}
+
+          {isAuthed && (
+            <NavLink to="/auth" className={styles.navLink}>
+              Login/Signup
+            </NavLink>
+          )}
         </nav>
       </aside>
     </>

@@ -4,6 +4,8 @@ import Layout from "./pages/Layout.jsx";
 import AuthenticationPage, {
   action as authAction,
 } from "./pages/Authentication.jsx";
+import AuthProvider from "./context/AuthContext.jsx";
+import { action as logoutAction } from "./pages/Logout.jsx";
 
 const router = createBrowserRouter([
   {
@@ -11,12 +13,19 @@ const router = createBrowserRouter([
     children: [
       { path: "/", element: <Home /> },
       { path: "/auth", element: <AuthenticationPage />, action: authAction },
+      {
+        path: "logout",
+        action: logoutAction,
+      },
     ],
   },
 ]);
 
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <AuthProvider>
+      <RouterProvider router={router} />;
+    </AuthProvider>
+  );
 }
-
 export default App;
