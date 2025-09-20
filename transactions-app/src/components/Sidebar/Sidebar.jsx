@@ -6,7 +6,7 @@ import { useAuth } from "../../context/AuthContext";
 
 export default function Sidebar() {
   const [sidebarOpen, setSideBarOpen] = useState(false);
-  const { isAuthed, logout } = useAuth();
+  const { isAuthed,loading, logout } = useAuth();
   const navigate = useNavigate();
 
   async function handleLogout() {
@@ -19,7 +19,11 @@ export default function Sidebar() {
   };
 
   const iconToShow = sidebarOpen ? <CloseIcon /> : <MenuIcon />;
-
+  if (loading) {
+    // Option 1: render nothing until we know
+    return null;
+    // Option 2: return a skeleton/placeholder if you prefer
+  }
   return (
     <>
       <button
