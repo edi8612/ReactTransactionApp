@@ -10,13 +10,12 @@ export default function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
   const location = useLocation();
 
-  // Use a truly PROTECTED endpoint now that GET /expenses requires auth
+  
   const STATUS_PATH = "/auth/status";
 
   async function check() {
     try {
       const res = await apiFetch(STATUS_PATH, { method: "GET" });
-      // 200 => logged in; 401/403 => logged out
       setIsAuthed(res.ok === true);
     } catch {
       setIsAuthed(false);
@@ -35,7 +34,7 @@ export default function AuthProvider({ children }) {
       method: "POST",
       body: JSON.stringify({ email, password }),
     });
-    if (res.ok) setIsAuthed(true);   // instant UI update
+    if (res.ok) setIsAuthed(true);   
     return res;
   }
 
