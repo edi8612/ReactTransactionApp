@@ -1,5 +1,6 @@
+// src/context/AuthContext.jsx
 import { createContext, useContext, useEffect, useState } from "react";
-import { useNavigation, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { apiFetch } from "../lib/api";
 
 const AuthCtx = createContext(null);
@@ -7,42 +8,37 @@ const AuthCtx = createContext(null);
 export default function AuthProvider({ children }) {
   const [isAuthed, setIsAuthed] = useState(false);
   const [loading, setLoading] = useState(true);
+  const location = useLocation();
 
-  useEffect(() => {
-    (async () => {
-      const res = await apiFetch("/categories", { method: "GET" });
-      setIsAuthed(res.ok); // if 401, ok=false
+  // Use a truly PROTECTED endpoint you already have
+  const STATUS_PATH = "/expenses"; // <- protected list endpoint
+
+  async function check() {
+    try {
+      // optional: add a tiny limit so it’s cheap if your API supports it
+      const res = await apiFetch(`${STATUS_PATH}`, { method: "GET" });
+      // 200 => logged in; 401/403 => logged out
+      setIsAuthed(res.ok === true);
+    } catch {
+      setIsAuthed(false);
+    } finally {
       setLoading(false);
-    })();
-  }, []);
-
-  async function login(email, password) {
-    const res = await apiFetch("/login", {
-      method: "POST",
-      body: JSON.stringify({ email, password }),
-    });
-    if (res.ok) setIsAuthed(true);
-    return res; // caller will handle messages/errors
+    }
   }
 
-  async function signup(email, password) {
-    const res = await apiFetch("/signup", {
-      method: "POST",
-      body: JSON.stringify({ email, password }),
-    });
-    if (res.ok) setIsAuthed(true);
-    return res;
-  }
+  useEffect(() => { check(); }, []);                // initial load
+  useEffect(() => { check(); }, [location.key]);    // after login redirect, etc.
 
   async function logout() {
-    await apiFetch("/logout", { method: "POST" }); // your API has this
+    await apiFetch("/logout", { method: "POST" });
     setIsAuthed(false);
   }
 
-  const value = { isAuthed, loading, login, signup, logout, setIsAuthed };
-  return <AuthCtx.Provider value={value}>{children}</AuthCtx.Provider>;
+  return (
+    <AuthCtx.Provider value={{ isAuthed, loading, logout }}>
+      {children}
+    </AuthCtx.Provider>
+  );
 }
 
-export function useAuth() {
-  return useContext(AuthCtx);
-}
+export function useAuth() { return useContext(AuthCtx); }

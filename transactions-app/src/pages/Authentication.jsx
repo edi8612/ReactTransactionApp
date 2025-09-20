@@ -1,57 +1,29 @@
 import { redirect } from "react-router-dom";
 import AuthForm from "../components/AuthForm/AuthForm.jsx";
-
-function AuthenticationPage() {
-  return <AuthForm />;
-}
-
-export default AuthenticationPage;
+import { apiFetch } from "../lib/api";
 
 export async function action({ request }) {
   const searchParams = new URL(request.url).searchParams;
   const mode = searchParams.get("mode") || "login";
-
   if (mode !== "login" && mode !== "signup") {
-    throw new Response(JSON.stringify({ message: "Unsupported mode." }), {
-      status: 422,
-    });
-  }
-  const data = await request.formData();
-
-  const authData = {
-    email: data.get("email"),
-    password: data.get("password"),
-  };
-
-  const response = await fetch("http://localhost:8080/api/" + mode, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-    body: JSON.stringify(authData),
-  });
-
-  if (response.status === 422 || response.status === 401) {
-    return response;
+    throw new Response(JSON.stringify({ message: "Unsupported mode." }), { status: 422 });
   }
 
-  if (!response.ok) {
-    throw new Response(
-      JSON.stringify({ message: "Could not authenticate user." }),
-      {
-        status: 500,
-      }
-    );
+  const formData = await request.formData();
+  const payload = Object.fromEntries(formData.entries());
+
+  const path = mode === "login" ? "/login" : "/signup";
+  const res = await apiFetch(path, { method: "POST", body: JSON.stringify(payload) });
+
+  if (!res.ok) {
+    // return an error for useActionData()
+    return new Response(JSON.stringify(res.data ?? { message: "Auth failed" }), { status: res.status || 400 });
   }
 
-  const resData = await response.json();
-  const token = resData.token;
-  
-  localStorage.setItem("token", token);
-  const expiration = new Date();
-  expiration.setHours(expiration.getHours() + 1);
-  localStorage.setItem("expiration", expiration.toISOString());
-
+  // Cookies are set by the server; we don’t store tokens locally for cookie-auth.
   return redirect("/");
+}
+
+export default function AuthenticationPage() {
+  return <AuthForm />;
 }

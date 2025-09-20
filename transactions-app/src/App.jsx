@@ -4,7 +4,6 @@ import Layout from "./pages/Layout.jsx";
 import AuthenticationPage, {
   action as authAction,
 } from "./pages/Authentication.jsx";
-import AuthProvider from "./context/AuthContext.jsx";
 import { action as logoutAction } from "./pages/Logout.jsx";
 
 const router = createBrowserRouter([
