@@ -15,7 +15,7 @@ export async function loader({ params }) {
   const { id } = params;
 
   // fetch the expense
-  const expenseRes = await apiFetch(`/expense/${id}`, { method: "GET" }); // your backend uses singular path
+  const expenseRes = await apiFetch(`/expense/${id}`, { method: "GET" }); 
   if (expenseRes.status === 401 || expenseRes.status === 403)
     return redirect("/auth");
 
@@ -80,7 +80,7 @@ export async function action({ request, params }) {
     );
   }
 
-  return redirect("/"); // back to Home; loader refetches list
+  return redirect("/"); 
 }
 
 export default function EditTransaction() {

@@ -18,7 +18,6 @@ export default function Sidebar() {
   const toggleSidebar = () => setSideBarOpen((v) => !v);
   const iconToShow = sidebarOpen ? <CloseIcon /> : <MenuIcon />;
 
-  // While checking auth, render nothing (or a skeleton) to avoid flicker
   if (loading) return null;
 
   return (

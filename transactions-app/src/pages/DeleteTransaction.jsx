@@ -13,5 +13,5 @@ export async function action({ params }) {
     });
   }
 
-  return redirect("/"); // Home loader runs again, list refreshes
+  return redirect("/"); 
 }
