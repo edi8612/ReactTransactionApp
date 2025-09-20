@@ -5,5 +5,6 @@ export async function action() {
     method: "POST",
     credentials: "include",
   }).catch(() => {});
+ 
   return redirect("/auth?mode=login");
 }

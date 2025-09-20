@@ -1,29 +1,25 @@
 import { useState } from "react";
-import { NavLink, Form, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import styles from "../Sidebar/Sidebar.module.css";
 import { MenuIcon, CloseIcon } from "../../assets/icons";
 import { useAuth } from "../../context/AuthContext";
 
 export default function Sidebar() {
   const [sidebarOpen, setSideBarOpen] = useState(false);
-  const { isAuthed,loading, logout } = useAuth();
+  const { isAuthed, loading, logout } = useAuth();
   const navigate = useNavigate();
 
   async function handleLogout() {
     await logout();
+    setSideBarOpen(false);
     navigate("/auth?mode=login");
   }
 
-  const toggleSidebar = () => {
-    setSideBarOpen(!sidebarOpen);
-  };
-
+  const toggleSidebar = () => setSideBarOpen((v) => !v);
   const iconToShow = sidebarOpen ? <CloseIcon /> : <MenuIcon />;
-  if (loading) {
-    // Option 1: render nothing until we know
-    return null;
-    // Option 2: return a skeleton/placeholder if you prefer
-  }
+
+  if (loading) return null;
+
   return (
     <>
       <button
@@ -33,36 +29,52 @@ export default function Sidebar() {
       >
         {iconToShow}
       </button>
+
       {sidebarOpen && (
-        <div
-          className={styles.overlay}
-          onClick={() => setSideBarOpen(false)}
-        ></div>
+        <div className={styles.overlay} onClick={() => setSideBarOpen(false)} />
       )}
 
       <aside
-        className={`${styles.sidebarContainer}  ${
+        className={`${styles.sidebarContainer} ${
           sidebarOpen ? styles.sidebarOpen : styles.sidebarClosed
         }`}
       >
         <nav className={styles.navContainer}>
-          <NavLink to="/" className={styles.navLink}>
+          <NavLink
+            to="/"
+            className={styles.navLink}
+            onClick={() => setSideBarOpen(false)}
+          >
             Home
           </NavLink>
 
           {!isAuthed && (
-            <NavLink to="/auth" className={styles.navLink}>
+            <NavLink
+              to="/auth"
+              className={styles.navLink}
+              onClick={() => setSideBarOpen(false)}
+            >
               Login/Signup
             </NavLink>
           )}
+
           {isAuthed && (
             <>
-              <a href="#CreateNewTransaction" className={styles.navLink}>
+              <NavLink
+                to="/transactions/new"
+                className={styles.navLink}
+                onClick={() => setSideBarOpen(false)}
+              >
                 Create New Transaction
-              </a>
-              <NavLink className={styles.navLink}>
-                <button onClick={handleLogout}>Logout</button>
               </NavLink>
+
+              <button
+                type="button"
+                className={styles.navButton}
+                onClick={handleLogout}
+              >
+                Logout
+              </button>
             </>
           )}
         </nav>

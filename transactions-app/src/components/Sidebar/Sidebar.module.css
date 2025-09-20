@@ -90,3 +90,21 @@
 .navLink:hover {
   background-color: #d1d5db; /* stone-300 */
 }
+
+
+.navButton {
+  background: transparent;
+  border-radius: 0.375rem;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  padding: 0.5rem;               /* base padding comes from .navLink */
+  display: block;           /* ensure block like links */
+  width: 100%;
+  text-align: left;
+  transition: background-color 0.2s ease;
+}
+
+.navButton:hover{
+  background-color: #d1d5db;
+}

@@ -10,14 +10,12 @@ export default function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
   const location = useLocation();
 
-  // Use a truly PROTECTED endpoint you already have
-  const STATUS_PATH = "/expenses"; // <- protected list endpoint
+  
+  const STATUS_PATH = "/auth/status";
 
   async function check() {
     try {
-      // optional: add a tiny limit so it’s cheap if your API supports it
-      const res = await apiFetch(`${STATUS_PATH}`, { method: "GET" });
-      // 200 => logged in; 401/403 => logged out
+      const res = await apiFetch(STATUS_PATH, { method: "GET" });
       setIsAuthed(res.ok === true);
     } catch {
       setIsAuthed(false);
@@ -26,19 +24,38 @@ export default function AuthProvider({ children }) {
     }
   }
 
-  useEffect(() => { check(); }, []);                // initial load
-  useEffect(() => { check(); }, [location.key]);    // after login redirect, etc.
+  // initial check
+  useEffect(() => { check(); }, []);
+  // re-check after navigation (e.g., after login redirect, logout)
+  useEffect(() => { check(); }, [location.key]);
+
+  async function login(email, password) {
+    const res = await apiFetch("/login", {
+      method: "POST",
+      body: JSON.stringify({ email, password }),
+    });
+    if (res.ok) setIsAuthed(true);   
+    return res;
+  }
+
+  async function signup(email, password) {
+    const res = await apiFetch("/signup", {
+      method: "POST",
+      body: JSON.stringify({ email, password }),
+    });
+    if (res.ok) setIsAuthed(true);
+    return res;
+  }
 
   async function logout() {
     await apiFetch("/logout", { method: "POST" });
     setIsAuthed(false);
   }
 
-  return (
-    <AuthCtx.Provider value={{ isAuthed, loading, logout }}>
-      {children}
-    </AuthCtx.Provider>
-  );
+  const value = { isAuthed, loading, login, signup, logout, setIsAuthed };
+  return <AuthCtx.Provider value={value}>{children}</AuthCtx.Provider>;
 }
 
-export function useAuth() { return useContext(AuthCtx); }
+export function useAuth() {
+  return useContext(AuthCtx);
+}
