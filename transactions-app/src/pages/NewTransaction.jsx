@@ -14,13 +14,13 @@ export async function loader() {
   return categories;
 }
 
-// Action: POST /expenses (cookie-based auth)
+
 export async function action({ request }) {
   const form = await request.formData();
   const payload = {
     title: form.get("title")?.trim(),
-    value: String(form.get("value") ?? ""),        // API expects string
-    categoryId: Number(form.get("categoryId")),    // adjust if your backend uses another name
+    value: String(form.get("value") ?? ""),        
+    categoryId: Number(form.get("categoryId")),    
   };
 
   if (!payload.title || !payload.value || !payload.categoryId) {

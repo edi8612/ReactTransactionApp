@@ -20,7 +20,6 @@ export async function action({ request }) {
     return new Response(JSON.stringify(res.data ?? { message: "Auth failed" }), { status: res.status || 400 });
   }
 
-  // Cookies are set by the server; we don’t store tokens locally for cookie-auth.
   return redirect("/");
 }
 
