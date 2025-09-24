@@ -2,14 +2,14 @@ import { useLoaderData, useActionData, redirect } from "react-router-dom";
 import { apiFetch } from "../lib/api";
 import TransactionForm from "../components/TransactionForm/TransactionForm.jsx";
 
-function normalizeExpense(e) {
-  return {
-    id: e.id,
-    title: e.title ?? "Untitled",
-    value: String(e.value ?? ""),
-    categoryId: e.category?.id ?? "",
-  };
-}
+// function normalizeExpense(e) {
+//   return {
+//     id: e.id,
+//     title: e.title ?? "Untitled",
+//     value: String(e.value ?? ""),
+//     categoryId: e.category?.id ?? "",
+//   };
+// }
 
 export async function loader({ params }) {
   const { id } = params;
