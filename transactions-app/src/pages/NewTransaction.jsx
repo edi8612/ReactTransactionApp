@@ -14,7 +14,6 @@ export async function loader() {
   return categories;
 }
 
-
 export async function action({ request }) {
   const form = await request.formData();
   const payload = {
