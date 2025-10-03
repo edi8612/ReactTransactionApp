@@ -16,7 +16,6 @@ describe("Authentication", () => {
   });
 
   function wrapper({ children }) {
-    // 👇 AuthProvider needs to sit inside a Router
     return (
       <MemoryRouter>
         <AuthProvider>{children}</AuthProvider>
