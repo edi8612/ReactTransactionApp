@@ -1,3 +1,4 @@
+import React from "react";
 const MenuIcon = ({ className = "w-4 h-4 ", ...props }) => {
   return (
     <svg 
