@@ -1,9 +1,10 @@
-import React from "react";
+import React, { JSX } from "react";
 import { Link, Form } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import styles from "./Transactions.module.css";
+import { TransactionProps } from "./Transactions.types";
 
-function fmtMoney(n) {
+function fmtMoney(n: number | string): string {
   const num = Number(n) || 0;
   try {
     return new Intl.NumberFormat(undefined, {
@@ -15,11 +16,13 @@ function fmtMoney(n) {
   }
 }
 
-export default function Transaction({ transaction }) {
+export default function Transaction({
+  transaction,
+}: TransactionProps): JSX.Element {
   const { isAuthed, loading } = useAuth();
 
   const amountClass =
-    transaction.amount >= 0
+    Number(transaction.amount) >= 0
       ? `${styles.amount} ${styles.amountPositive}`
       : `${styles.amount} ${styles.amountNegative}`;
 

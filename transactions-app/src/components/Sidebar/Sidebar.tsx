@@ -1,21 +1,21 @@
-import React, { useState } from "react";
+import React, { JSX, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import styles from "../Sidebar/Sidebar.module.css";
 import { MenuIcon, CloseIcon } from "../../assets/icons";
 import { useAuth } from "../../context/AuthContext";
 
-export default function Sidebar() {
-  const [sidebarOpen, setSideBarOpen] = useState(false);
+export default function Sidebar(): JSX.Element | null {
+  const [sidebarOpen, setSideBarOpen] = useState<boolean>(false);
   const { isAuthed, loading, logout } = useAuth();
   const navigate = useNavigate();
 
-  async function handleLogout() {
-    await logout();
+  async function handleLogout():Promise<void> {
+    await logout?.();
     setSideBarOpen(false);
     navigate("/auth?mode=login");
   }
 
-  const toggleSidebar = () => setSideBarOpen((v) => !v);
+  const toggleSidebar = ():void => setSideBarOpen((v) => !v);
   const iconToShow = sidebarOpen ? <CloseIcon /> : <MenuIcon />;
 
   if (loading) return null;

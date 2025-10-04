@@ -3,7 +3,7 @@ import React from "react";
 import { describe, it, expect, beforeEach, vi, afterEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import { useAuth } from "../../src/context/AuthContext";
+import { AuthContextValue, useAuth } from "../../src/context/AuthContext";
 import "@testing-library/jest-dom";
 import { cleanup } from "@testing-library/react";
 
@@ -15,18 +15,28 @@ vi.mock("../../src/context/AuthContext", () => {
   };
 });
 
+const baseAuth: AuthContextValue = {
+  isAuthed: false,
+  loading: false,
+  login: vi.fn(),
+  signup: vi.fn(),
+  logout: vi.fn(),
+  setIsAuthed: vi.fn(),
+};
 
 vi.mock("../../assets/icons", () => ({
   MenuIcon: () => <svg data-testid="menu-icon" />,
   CloseIcon: () => <svg data-testid="close-icon" />,
 }));
 
-
-vi.mock("../Sidebar/Sidebar.module.css", () => ({}), { virtual: true });
-
+// vi.mock("../Sidebar/Sidebar.module.css", () => ({}), { virtual: true });
+vi.mock(
+  "@/components/Sidebar/Sidebar.module.css",
+  () => ({} as Record<string, string>)
+);
 
 vi.mock("react-router-dom", async (orig) => {
-  const actual = await orig();
+  const actual = (await orig()) as typeof import("react-router-dom");
   return {
     ...actual,
     useNavigate: () => vi.fn(),
@@ -50,9 +60,8 @@ describe("Sidebar conditional rendering", () => {
 
   it("renders nothing while auth is loading", () => {
     vi.mocked(useAuth).mockReturnValue({
-      isAuthed: false,
+      ...baseAuth,
       loading: true,
-      logout: vi.fn(),
     });
 
     const { container } = renderSidebar();
@@ -62,9 +71,8 @@ describe("Sidebar conditional rendering", () => {
 
   it("shows Login/Signup when not authenticated", () => {
     vi.mocked(useAuth).mockReturnValue({
+      ...baseAuth,
       isAuthed: false,
-      loading: false,
-      logout: vi.fn(),
     });
 
     renderSidebar();
@@ -84,9 +92,8 @@ describe("Sidebar conditional rendering", () => {
 
   it("shows Create New Transaction + Logout when authenticated, hides Login/Signup", () => {
     vi.mocked(useAuth).mockReturnValue({
+      ...baseAuth,
       isAuthed: true,
-      loading: false,
-      logout: vi.fn(),
     });
 
     renderSidebar();
