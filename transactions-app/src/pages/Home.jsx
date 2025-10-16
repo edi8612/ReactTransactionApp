@@ -4,12 +4,13 @@ import { apiFetch } from "../lib/api";
 import { API } from "../lib/endpoints.js";
 
 function toCard(e) {
+  const rawDate = e.date ?? e.updatedAt ?? e.createdAt ?? null;
   return {
     id: e.id,
     title: e.title ?? "Untitled",
     category: e.category?.name ?? "Uncategorized",
     amount: Number(e.value ?? 0), // value is a string -> number
-    date: (e.createdAt ?? "").slice(0, 10), // YYYY-MM-DD
+    date: rawDate ? new Date(rawDate).toISOString().slice(0, 10) : null, // YYYY-MM-DD
   };
 }
 
@@ -26,8 +27,7 @@ export async function loader() {
   }
 
   const items = (res.data || []).map(toCard);
-  items.sort((a, b) => new Date(b.date) - new Date(a.date));
-
+  items.sort((a, b) => (b.date ? Date.parse(b.date) : 0) - (a.date ? Date.parse(a.date) : 0));
   return items;
 }
 
