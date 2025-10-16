@@ -1,6 +1,7 @@
 import Transaction from "../components/Transactions/Transactions.jsx";
 import { useLoaderData, redirect } from "react-router-dom";
 import { apiFetch } from "../lib/api";
+import { API } from "../lib/endpoints.js";
 
 function toCard(e) {
   return {
@@ -13,7 +14,7 @@ function toCard(e) {
 }
 
 export async function loader() {
-  const res = await apiFetch("/expenses", { method: "GET" });
+  const res = await apiFetch(API.tx.list, { method: "GET" });
   if (res.status === 401 || res.status === 403) return redirect("/auth");
   if (!res.ok) {
     throw new Response(

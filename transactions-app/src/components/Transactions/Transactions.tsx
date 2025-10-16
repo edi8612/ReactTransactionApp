@@ -1,8 +1,9 @@
-import React, { JSX } from "react";
+import  { JSX } from "react";
 import { Link, Form } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import styles from "./Transactions.module.css";
 import { TransactionProps } from "./Transactions.types";
+
 
 function fmtMoney(n: number | string): string {
   const num = Number(n) || 0;

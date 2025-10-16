@@ -1,6 +1,7 @@
 import { redirect } from "react-router-dom";
 import AuthForm from "../components/AuthForm/AuthForm.jsx";
 import { apiFetch } from "../lib/api";
+import { API } from "../lib/endpoints.js";
 
 export async function action({ request }) {
   const searchParams = new URL(request.url).searchParams;
@@ -14,7 +15,7 @@ export async function action({ request }) {
   const formData = await request.formData();
   const payload = Object.fromEntries(formData.entries());
 
-  const path = mode === "login" ? "/login" : "/signup";
+  const path = mode === "login" ? API.auth.login : API.auth.signup;
   const res = await apiFetch(path, {
     method: "POST",
     body: JSON.stringify(payload),

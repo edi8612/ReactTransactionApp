@@ -1,6 +1,7 @@
 import { useLoaderData, useActionData, redirect } from "react-router-dom";
 import { apiFetch } from "../lib/api";
 import TransactionForm from "../components/TransactionForm/TransactionForm.jsx";
+import { API } from "../lib/endpoints.js";
 
 // function normalizeExpense(e) {
 //   return {
@@ -15,7 +16,7 @@ export async function loader({ params }) {
   const { id } = params;
 
   // fetch the expense
-  const expenseRes = await apiFetch(`/expense/${id}`, { method: "GET" }); 
+  const expenseRes = await apiFetch(API.tx.one(id), { method: "GET" });
   if (expenseRes.status === 401 || expenseRes.status === 403)
     return redirect("/auth");
 
@@ -26,7 +27,7 @@ export async function loader({ params }) {
   }
 
   // fetch categories for the dropdown
-  const catsRes = await apiFetch("/categories", { method: "GET" });
+  const catsRes = await apiFetch(API.categories, { method: "GET" });
   if (!catsRes.ok) {
     throw new Response(
       JSON.stringify({ message: "Failed to load categories" }),
@@ -65,7 +66,7 @@ export async function action({ request, params }) {
     );
   }
 
-  const res = await apiFetch(`/expenses/${id}`, {
+  const res = await apiFetch(API.tx.update(id), {
     method: "PUT",
     body: JSON.stringify(payload),
   });
@@ -80,7 +81,7 @@ export async function action({ request, params }) {
     );
   }
 
-  return redirect("/"); 
+  return redirect("/");
 }
 
 export default function EditTransaction() {

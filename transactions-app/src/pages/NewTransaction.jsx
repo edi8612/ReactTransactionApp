@@ -1,15 +1,19 @@
-import { useLoaderData, useActionData, redirect,  } from "react-router-dom";
+import { useLoaderData, useActionData, redirect } from "react-router-dom";
 import { apiFetch } from "../lib/api";
 import TransactionForm from "../components/TransactionForm/TransactionForm.jsx";
+import { API } from "../lib/endpoints.js";
 
 // Loader: fetch categories for the dropdown
 export async function loader() {
-  const res = await apiFetch("/categories", { method: "GET" });
+  const res = await apiFetch(API.categories, { method: "GET" });
   if (!res.ok) {
-  throw new Response(JSON.stringify({ message: "Failed to load categories" }), {
-    status: res.status || 500,
-  });
-}
+    throw new Response(
+      JSON.stringify({ message: "Failed to load categories" }),
+      {
+        status: res.status || 500,
+      }
+    );
+  }
   const categories = (res.data || []).map((c) => ({ id: c.id, name: c.name }));
   return categories;
 }
@@ -18,15 +22,15 @@ export async function action({ request }) {
   const form = await request.formData();
   const payload = {
     title: form.get("title")?.trim(),
-    value: String(form.get("value") ?? ""),        
-    categoryId: Number(form.get("categoryId")),    
+    value: String(form.get("value") ?? ""),
+    categoryId: Number(form.get("categoryId")),
   };
 
   if (!payload.title || !payload.value || !payload.categoryId) {
     return json({ error: "Please fill all required fields." }, { status: 400 });
   }
 
-  const res = await apiFetch("/expenses", {
+  const res = await apiFetch(API.tx.create, {
     method: "POST",
     body: JSON.stringify(payload),
   });
@@ -34,11 +38,14 @@ export async function action({ request }) {
   if (res.status === 401 || res.status === 403) {
     return redirect("/auth");
   }
-if (!payload.title || !payload.value || !payload.categoryId) {
-  return new Response(JSON.stringify({ error: "Please fill all required fields." }), {
-    status: 400,
-  });
-}
+  if (!payload.title || !payload.value || !payload.categoryId) {
+    return new Response(
+      JSON.stringify({ error: "Please fill all required fields." }),
+      {
+        status: 400,
+      }
+    );
+  }
 
   return redirect("/"); // Home loader will re-fetch and show the new item
 }

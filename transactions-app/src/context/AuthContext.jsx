@@ -2,7 +2,7 @@ import React from "react";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { apiFetch } from "../lib/api";
-
+import { API } from "../lib/endpoints";
 const AuthCtx = createContext(null);
 
 export default function AuthProvider({ children }) {
@@ -10,12 +10,10 @@ export default function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
   const location = useLocation();
 
-  
-  const STATUS_PATH = "/auth/status";
 
   async function check() {
     try {
-      const res = await apiFetch(STATUS_PATH, { method: "GET" });
+      const res = await apiFetch(API.auth.status, { method: "GET" });
       setIsAuthed(res.ok === true);
     } catch {
       setIsAuthed(false);
@@ -25,21 +23,25 @@ export default function AuthProvider({ children }) {
   }
 
   // initial check
-  useEffect(() => { check(); }, []);
+  useEffect(() => {
+    check();
+  }, []);
   // re-check after navigation (e.g., after login redirect, logout)
-  useEffect(() => { check(); }, [location.key]);
+  useEffect(() => {
+    check();
+  }, [location.key]);
 
   async function login(email, password) {
-    const res = await apiFetch("/login", {
+    const res = await apiFetch(API.auth.login, {
       method: "POST",
       body: JSON.stringify({ email, password }),
     });
-    if (res.ok) setIsAuthed(true);   
+    if (res.ok) setIsAuthed(true);
     return res;
   }
 
   async function signup(email, password) {
-    const res = await apiFetch("/signup", {
+    const res = await apiFetch(API.auth.signup, {
       method: "POST",
       body: JSON.stringify({ email, password }),
     });
@@ -48,7 +50,7 @@ export default function AuthProvider({ children }) {
   }
 
   async function logout() {
-    await apiFetch("/logout", { method: "POST" });
+    await apiFetch(API.auth.logout, { method: "POST" });
     setIsAuthed(false);
   }
 
