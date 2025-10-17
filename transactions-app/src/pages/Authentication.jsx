@@ -22,8 +22,6 @@ export async function action({ request }) {
   });
 
   if (!res.ok) {
-    // return an error for useActionData()
-    // return new Response(JSON.stringify(res.data ?? { message: "Auth failed" }), { status: res.status || 400 });
     const msg =
       res.data?.message ||
       (res.status === 401

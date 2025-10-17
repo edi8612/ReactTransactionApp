@@ -3,15 +3,6 @@ import { apiFetch } from "../lib/api";
 import TransactionForm from "../components/TransactionForm/TransactionForm.jsx";
 import { API } from "../lib/endpoints.js";
 
-// function normalizeExpense(e) {
-//   return {
-//     id: e.id,
-//     title: e.title ?? "Untitled",
-//     value: String(e.value ?? ""),
-//     categoryId: e.category?.id ?? "",
-//   };
-// }
-
 export async function loader({ params }) {
   const { id } = params;
 

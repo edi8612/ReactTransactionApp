@@ -3,7 +3,7 @@ export const API_BASE =
 
 export async function apiFetch(path, options = {}) {
   const res = await fetch(`${API_BASE}${path}`, {
-    credentials: "include", // <-- cookie flows
+    credentials: "include",
     headers: { "Content-Type": "application/json", ...(options.headers || {}) },
     ...options,
   });
@@ -15,4 +15,3 @@ export async function apiFetch(path, options = {}) {
   }
   return { ok: true, status: res.status, data };
 }
-
