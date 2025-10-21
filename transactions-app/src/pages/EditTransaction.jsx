@@ -1,97 +1,80 @@
-import { useLoaderData, useActionData, redirect } from "react-router-dom";
+import { useLoaderData } from "react-router-dom";
+import TransactionForm from "../components/TransactionForm/TransactionForm";
 import { apiFetch } from "../lib/api";
-import TransactionForm from "../components/TransactionForm/TransactionForm.jsx";
-import { API } from "../lib/endpoints.js";
+import { API } from "../lib/endpoints";
+
 
 export async function loader({ params }) {
-  const { id } = params;
-
-  // fetch the expense
-  const expenseRes = await apiFetch(API.tx.one(id), { method: "GET" });
-  if (expenseRes.status === 401 || expenseRes.status === 403)
-    return redirect("/auth");
-
-  if (!expenseRes.ok) {
-    throw new Response(JSON.stringify({ message: "Failed to load expense" }), {
-      status: expenseRes.status || 500,
-    });
+  
+  
+  const transactionRes = await apiFetch(
+    API.tx.one(params.id), 
+    { method: "GET" }
+  );
+  
+  
+  if (!transactionRes.ok) {
+    throw new Response("Transaction not found", { status: 404 });
   }
-
-  // fetch categories for the dropdown
-  const catsRes = await apiFetch(API.categories, { method: "GET" });
-  if (!catsRes.ok) {
-    throw new Response(
-      JSON.stringify({ message: "Failed to load categories" }),
-      {
-        status: catsRes.status || 500,
-      }
-    );
-  }
-
+  
+  const categoriesRes = await apiFetch(API.categories, { method: "GET" });
+  
   return {
-    expense: {
-      id: expenseRes.data.id,
-      title: expenseRes.data.title,
-      value: String(expenseRes.data.value ?? ""),
-      categoryId: expenseRes.data.category?.id ?? "",
-    },
-    categories: (catsRes.data || []).map((c) => ({ id: c.id, name: c.name })),
+    transactionId: params.id, 
+    transaction: transactionRes.data,
+    categories: categoriesRes.ok ? categoriesRes.data : [],
   };
-}
-
-export async function action({ request, params }) {
-  const { id } = params;
-  const form = await request.formData();
-  const payload = {
-    title: form.get("title")?.trim(),
-    value: String(form.get("value") ?? ""),
-    categoryId: Number(form.get("categoryId")),
-  };
-
-  if (!payload.title || !payload.value || !payload.categoryId) {
-    return new Response(
-      JSON.stringify({ error: "Please fill all required fields." }),
-      {
-        status: 400,
-      }
-    );
-  }
-
-  const res = await apiFetch(API.tx.update(id), {
-    method: "PUT",
-    body: JSON.stringify(payload),
-  });
-
-  if (res.status === 401 || res.status === 403) return redirect("/auth");
-  if (!res.ok) {
-    return new Response(
-      JSON.stringify(res.data ?? { error: "Failed to update expense" }),
-      {
-        status: res.status || 500,
-      }
-    );
-  }
-
-  return redirect("/");
 }
 
 export default function EditTransaction() {
-  const data = useLoaderData() ?? { expense: null, categories: [] };
-  const actionData = useActionData();
+  const { transactionId, transaction, categories } = useLoaderData();
+  
+  const handleSave = async (formData) => {
+    
+    
+    try {
+      const res = await apiFetch(
+        API.tx.update(transactionId), 
+        {
+          method: "PUT",
+          body: JSON.stringify({
+            title: formData.title,
+            value: parseFloat(formData.value),
+            categoryId: formData.categoryId,
+          }),
+        }
+      );
 
-  const defaults = data.expense ?? { title: "", value: "", categoryId: "" };
-  const categories = data.categories ?? [];
+      console.log("Update response:", res); // DEBUG
+
+      if (res.ok) {
+        return { success: true };
+      } else {
+        return {
+          success: false,
+          error: res.data?.message || "Failed to update transaction",
+        };
+      }
+    } catch (error) {
+      console.error("Error updating transaction:", error); // DEBUG
+      return {
+        success: false,
+        error: error.message || "Network error occurred",
+      };
+    }
+  };
 
   return (
-    <main className="ml-0 md:ml-64 pt-16 min-h-screen bg-gray-100">
-      <TransactionForm
-        title="Edit Transaction"
-        categories={categories}
-        defaultValues={defaults}
-        error={actionData?.error}
-        submitLabel="Update"
-        cancelHref="/"
-      />
-    </main>
+    <TransactionForm
+      title="Edit Transaction"
+      categories={categories}
+      defaultValues={{
+        title: transaction.title,
+        value: transaction.amount || transaction.value,
+        categoryId: transaction.categoryId,
+      }}
+      onSave={handleSave}
+      cancelHref="/"
+    />
   );
 }

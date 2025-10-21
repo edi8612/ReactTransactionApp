@@ -7,14 +7,10 @@ import AuthenticationPage, {
 import { action as logoutAction } from "./pages/Logout.jsx";
 import { loader as expensesLoader } from "./pages/Home.jsx";
 import NewTransaction, {
-  loader as newTrsLoader,
-  action as newTrsAction,
+  loader as newTrsLoader
 } from "./pages/NewTransaction.jsx";
 
-import EditTransaction, {
-  loader as editTrsLoader,
-  action as editTrsAction,
-} from "./pages/EditTransaction.jsx";
+import EditTransaction, {loader as editTrsLoader} from "./pages/EditTransaction.jsx";
 
 import { action as deleteTrsAction } from "./pages/DeleteTransaction.jsx";
 
@@ -32,13 +28,13 @@ const router = createBrowserRouter([
         path: "transactions/new",
         element: <NewTransaction />,
         loader: newTrsLoader,
-        action: newTrsAction,
+        // action: newTrsAction,
       },
       {
         path: "transactions/:id/edit",
         element: <EditTransaction />,
         loader: editTrsLoader,
-        action: editTrsAction,
+        // action: editTrsAction,
       },
       {
         path: "transactions/:id/delete",
