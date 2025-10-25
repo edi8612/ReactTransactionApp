@@ -1,10 +1,8 @@
-// src/lib/endpoints.js
 export const API = {
   auth: {
     login: "/auth/login",
     signup: "/auth/signup",
     logout: "/auth/logout",
-    status: "/auth/status",
   },
   tx: {
     list: "/transaction",

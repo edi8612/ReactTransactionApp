@@ -10,8 +10,18 @@ export async function apiFetch(path, options = {}) {
 
   const data = await res.json().catch(() => ({}));
 
-  if (!res.ok) {
-    return { ok: false, status: res.status, data };
+  // if (!res.ok) {
+  //   return { ok: false, status: res.status, data };
+  // }
+  // return { ok: true, status: res.status, data };
+
+  if (res.status === 401) {
+    window.dispatchEvent(new CustomEvent('auth:unauthorized'));
   }
-  return { ok: true, status: res.status, data };
+
+  return {
+    ok: res.ok,
+    status: res.status,
+    data,
+  };
 }

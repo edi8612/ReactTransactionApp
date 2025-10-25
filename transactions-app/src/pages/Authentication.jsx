@@ -37,6 +37,9 @@ export async function action({ request }) {
     return { message: msg, errors }; 
   }
 
+   if (mode === "signup") {
+    return redirect("/auth?mode=login&registered=true"); // Redirect to login after signup
+  }
   return redirect("/");
 }
 

@@ -20,7 +20,7 @@ function fmtMoney(n: number | string): string {
 export default function Transaction({
   transaction,
 }: TransactionProps): JSX.Element {
-  const { isAuthed, loading } = useAuth();
+  const { isAuthed } = useAuth();
 
   const amountClass =
     Number(transaction.amount) >= 0
@@ -42,7 +42,8 @@ export default function Transaction({
         Date: <span className={styles.label}>{transaction.date}</span>
       </p>
 
-      {!loading && isAuthed && (
+      
+      { isAuthed && (
         <div className={styles.actions}>
           <Link
             to={`/transactions/${transaction.id}/edit`}

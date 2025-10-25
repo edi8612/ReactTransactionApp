@@ -1,24 +1,22 @@
-import React, { JSX, useState } from "react";
+import { JSX, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import styles from "../Sidebar/Sidebar.module.css";
 import { MenuIcon, CloseIcon } from "../../assets/icons";
 import { useAuth } from "../../context/AuthContext";
 
-export default function Sidebar(): JSX.Element | null {
+export default function Sidebar(): JSX.Element {
   const [sidebarOpen, setSideBarOpen] = useState<boolean>(false);
-  const { isAuthed, loading, logout } = useAuth();
+  const { isAuthed,logout } = useAuth();
   const navigate = useNavigate();
 
-  async function handleLogout():Promise<void> {
+  async function handleLogout(): Promise<void> {
     await logout?.();
     setSideBarOpen(false);
     navigate("/auth?mode=login");
   }
 
-  const toggleSidebar = ():void => setSideBarOpen((v) => !v);
+  const toggleSidebar = (): void => setSideBarOpen((v) => !v);
   const iconToShow = sidebarOpen ? <CloseIcon /> : <MenuIcon />;
-
-  if (loading) return null;
 
   return (
     <>
@@ -48,7 +46,10 @@ export default function Sidebar(): JSX.Element | null {
             Home
           </NavLink>
 
-          {!isAuthed && (
+        
+
+        
+          { !isAuthed && (
             <NavLink
               to="/auth"
               className={styles.navLink}
@@ -58,7 +59,8 @@ export default function Sidebar(): JSX.Element | null {
             </NavLink>
           )}
 
-          {isAuthed && (
+        
+          { isAuthed && (
             <>
               <NavLink
                 to="/transactions/new"

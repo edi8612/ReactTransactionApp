@@ -45,7 +45,7 @@ export default function EditTransaction() {
         }
       );
 
-      console.log("Update response:", res); // DEBUG
+      console.log("Update response:", res); 
 
       if (res.ok) {
         return { success: true };
@@ -56,7 +56,7 @@ export default function EditTransaction() {
         };
       }
     } catch (error) {
-      console.error("Error updating transaction:", error); // DEBUG
+      console.error("Error updating transaction:", error); 
       return {
         success: false,
         error: error.message || "Network error occurred",
