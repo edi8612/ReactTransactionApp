@@ -1,4 +1,3 @@
-// context/AuthContext.jsx
 import React from "react";
 import { createContext, useContext, useEffect, useState } from "react";
 import { apiFetch } from "../lib/api";
@@ -13,7 +12,7 @@ function hasAuthCookie() {
 
 export default function AuthProvider({ children }) {
   const [isAuthed, setIsAuthed] = useState(() => hasAuthCookie());
-  // const [loading, setLoading] = useState(false);
+ 
 
   
   useEffect(() => {
@@ -87,3 +86,4 @@ export default function AuthProvider({ children }) {
 export function useAuth() {
   return useContext(AuthCtx);
 }
+

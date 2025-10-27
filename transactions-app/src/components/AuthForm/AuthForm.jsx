@@ -21,7 +21,7 @@ function AuthForm() {
       action={`?mode=${isLogin ? "login" : "signup"}`}
       className={styles.form}
     >
-      <h1>{isLogin ? "Log in" : "Create a new user"}</h1>
+      <h1>{isLogin ? "Login" : "Create a new user"}</h1>
       {data?.message && <div className={styles.errorBox}>{data.message}</div>}
 
       <p>
